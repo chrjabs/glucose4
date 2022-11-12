@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.9)
 
-project(glucose)
+project(glucose4)
 
 option(BUILD_SHARED_LIBS OFF "True for building shared object")
 
@@ -39,12 +39,14 @@ include_directories(
 link_libraries(${ZLIB_LIBRARY})
 
 # base library
-add_library(glucose ${lib_type} ${lib_srcs})
+add_library(glucose4 ${lib_type} ${lib_srcs})
 
-add_executable(glucose-simp ${main_simp})
-target_link_libraries(glucose-simp glucose)
+add_executable(glucose4-simp ${main_simp})
+target_link_libraries(glucose4-simp glucose4)
 
 # PARALLEL STUFF:
-add_library(glucosep ${lib_type} ${lib_srcs} ${lib_parallel_srcs})
-add_executable(glucose-syrup ${main_parallel})
-target_link_libraries(glucose-syrup glucosep ${CMAKE_THREAD_LIBS_INIT})
+add_library(glucosep4 ${lib_type} ${lib_srcs} ${lib_parallel_srcs})
+add_executable(glucose4-syrup ${main_parallel})
+target_link_libraries(glucose4-syrup glucosep4 ${CMAKE_THREAD_LIBS_INIT})
+
+install(TARGETS glucose4 glucosep4 glucose4-simp glucose4-syrup)
