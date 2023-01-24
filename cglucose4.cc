@@ -26,7 +26,7 @@
 #include "core/Solver.h"
 #include "simp/SimpSolver.h"
 
-#define IPASIR2MS(il) (mkLit(abs(il), il < 0))
+#define IPASIR2MS(il) (mkLit(abs(il) - 1, il < 0))
 
 namespace Glucose {
 
@@ -78,10 +78,13 @@ void cglucosesimp4_release(CGlucoseSimp4 *handle) {
 void cglucose4_add(CGlucose4 *handle, int lit) {
   Wrapper *wrapper = (Wrapper *)handle;
   if (lit) {
+    int var = abs(lit) - 1;
+    while (var >= wrapper->solver->nVars())
+      wrapper->solver->newVar();
     wrapper->clause.push(IPASIR2MS(lit));
     return;
   }
-  wrapper->solver->addClause(wrapper->clause);
+  wrapper->solver->addClause_(wrapper->clause);
   wrapper->clause.clear();
 }
 
