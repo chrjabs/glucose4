@@ -34,9 +34,9 @@ namespace Glucose {
 // because we are casting SimpWrapper into Wrapper
 
 struct Wrapper {
+  Solver *solver;
   vec<Lit> clause{};
   vec<Lit> assumps{};
-  Solver *solver;
 
   Wrapper() : solver(new Solver()) {}
 
