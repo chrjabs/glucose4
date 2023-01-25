@@ -103,6 +103,7 @@ void cglucosesimp4_assume(CGlucoseSimp4 *handle, int lit) {
 int cglucose4_solve(CGlucose4 *handle) {
   Wrapper *wrapper = (Wrapper *)handle;
   lbool res = wrapper->solver->solveLimited(wrapper->assumps);
+  wrapper->assumps.clear();
   if (res == l_True) {
     return 10;
   }
