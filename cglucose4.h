@@ -58,6 +58,10 @@ void cglucose4_set_conf_limit(CGlucose4 *, int64_t limit);
 void cglucose4_set_prop_limit(CGlucose4 *, int64_t limit);
 void cglucose4_set_no_limit(CGlucose4 *);
 void cglucose4_interrupt(CGlucose4 *);
+
+uint64_t cglucose4_decisions(CGlucose4 *);
+uint64_t cglucose4_propagations(CGlucose4 *);
+uint64_t cglucose4_conflicts(CGlucose4 *);
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -80,7 +84,11 @@ int cglucose4_n_vars(CGlucose4 *);
 void cglucosimp4_set_conf_limit(CGlucoseSimp4 *, int64_t limit);
 void cglucosesimp4_set_prop_limit(CGlucoseSimp4 *, int64_t limit);
 void cglucosesimp4_set_no_limit(CGlucoseSimp4 *);
-void cglucose4_interrupt(CGlucose4 *);
+void cglucosesimp4_interrupt(CGlucoseSimp4 *);
+
+uint64_t cglucosesimp4_decisions(CGlucoseSimp4 *);
+uint64_t cglucosesimp4_propagations(CGlucoseSimp4 *);
+uint64_t cglucosesimp4_conflicts(CGlucoseSimp4 *);
 
 // Simplification-specific functions
 void cglucosesimp4_set_frozen(CGlucoseSimp4 *, int var, bool frozen);

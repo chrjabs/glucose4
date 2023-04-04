@@ -213,6 +213,30 @@ void cglucosesimp4_interrupt(CGlucoseSimp4 *handle) {
   ((SimpWrapper *)handle)->solver->interrupt();
 }
 
+uint64_t cglucose4_decisions(CGlucose4 *handle) {
+  return ((Wrapper *)handle)->solver->decisions;
+}
+
+uint64_t cglucosesimp4_decisions(CGlucoseSimp4 *handle) {
+  return ((SimpWrapper *)handle)->solver->decisions;
+}
+
+uint64_t cglucose4_propagations(CGlucose4 *handle) {
+  return ((Wrapper *)handle)->solver->propagations;
+}
+
+uint64_t cglucosesimp4_propagations(CGlucoseSimp4 *handle) {
+  return ((SimpWrapper *)handle)->solver->propagations;
+}
+
+uint64_t cglucose4_conflicts(CGlucose4 *handle) {
+  return ((Wrapper *)handle)->solver->conflicts;
+}
+
+uint64_t cglucosesimp4_conflicts(CGlucoseSimp4 *handle) {
+  return ((SimpWrapper *)handle)->solver->conflicts;
+}
+
 void cglucosesimp4_set_frozen(CGlucoseSimp4 *handle, int var, bool frozen) {
   ((SimpWrapper *)handle)->solver->setFrozen(var, frozen);
 }
