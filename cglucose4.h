@@ -49,6 +49,9 @@ int cglucose4_solve(CGlucose4 *);
 int cglucose4_val(CGlucose4 *, int lit);
 int cglucose4_failed(CGlucose4 *, int lit);
 
+void cglucose4_phase(CGlucose4 *, int lit);
+void cglucose4_unphase(CGlucose4 *, int lit);
+
 int cglucose4_n_assigns(CGlucose4 *);
 int cglucose4_n_clauses(CGlucose4 *);
 int cglucose4_n_learnts(CGlucose4 *);
@@ -75,6 +78,9 @@ void cglucosesimp4_assume(CGlucoseSimp4 *, int lit);
 int cglucosesimp4_solve(CGlucoseSimp4 *);
 int cglucosesimp4_val(CGlucoseSimp4 *, int lit);
 int cglucosesimp4_failed(CGlucoseSimp4 *, int lit);
+
+void cglucosesimp4_phase(CGlucoseSimp4 *, int lit);
+void cglucosesimp4_unphase(CGlucoseSimp4 *, int lit);
 
 int cglucose4_n_assigns(CGlucose4 *);
 int cglucose4_n_clauses(CGlucose4 *);

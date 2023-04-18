@@ -190,6 +190,11 @@ public:
     void    checkGarbage(double gf);
     void    checkGarbage();
 
+    // Phase saving extension (Christoph Jabs - @chrjabs)
+    void phase   (Lit p);
+    void unphase (Var v);
+    vec<lbool> saved_phases;
+
     // Extra results: (read-only member variable)
     //
     vec<lbool> model;             // If problem is satisfiable, this vector contains the model (if any).

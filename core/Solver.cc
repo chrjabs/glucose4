@@ -618,6 +618,22 @@ void Solver::cancelUntil(int level) {
     }
 }
 
+// Phase saving extension (Christoph Jabs - @chrjabs)
+void Solver::phase(Lit p) {
+    Var v = var(p);
+    if (saved_phases.size() <= v) {
+        saved_phases.growTo(nVars(), l_Undef);
+    }
+    assert(saved_phases.size() > v);
+    saved_phases[v] = sign(p) ? l_False : l_True;
+}
+
+void Solver::unphase(Var v) {
+    if (saved_phases.size() > v) {
+        saved_phases[v] = l_Undef;
+    }
+}
+
 
 //=================================================================================================
 // Major methods:
@@ -640,6 +656,11 @@ Lit Solver::pickBranchLit() {
         } else {
             next = order_heap.removeMin();
         }
+
+    // Phase saving extension (Christoph Jabs - @chrjabs)
+    if (next != var_Undef && saved_phases.size() > next && saved_phases[next] != l_Undef) {
+        return mkLit(next, saved_phases[next] != l_True);
+    }
 
     if(randomize_on_restarts && !fixed_randomize_on_restarts && newDescent && (decisionLevel() % 2 == 0)) {
         return mkLit(next, (randomDescentAssignments >> (decisionLevel() % 32)) & 1);

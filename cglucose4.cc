@@ -131,7 +131,7 @@ int cglucose4_val(CGlucose4 *handle, int lit) {
 }
 
 int cglucosesimp4_val(CGlucoseSimp4 *handle, int lit) {
-  return cglucose4_solve((CGlucose4 *)handle);
+  return cglucose4_val((CGlucose4 *)handle, lit);
 }
 
 int cglucose4_failed(CGlucose4 *handle, int lit) {
@@ -147,6 +147,22 @@ int cglucose4_failed(CGlucose4 *handle, int lit) {
 
 int cglucosesimp4_failed(CGlucoseSimp4 *handle, int lit) {
   return cglucose4_failed((CGlucose4 *)handle, lit);
+}
+
+void cglucose4_phase(CGlucose4 *handle, int lit) {
+  return ((Wrapper *)handle)->solver->phase(IPASIR2MS(lit));
+}
+
+void cglucosesimp4_phase(CGlucoseSimp4 *handle, int lit) {
+  return ((SimpWrapper *)handle)->solver->phase(IPASIR2MS(lit));
+}
+
+void cglucose4_unphase(CGlucose4 *handle, int lit) {
+  return ((Wrapper *)handle)->solver->unphase(var(IPASIR2MS(lit)));
+}
+
+void cglucosesimp4_unphase(CGlucoseSimp4 *handle, int lit) {
+  return ((SimpWrapper *)handle)->solver->unphase(var(IPASIR2MS(lit)));
 }
 
 int cglucose4_n_assigns(CGlucose4 *handle) {
