@@ -81,7 +81,7 @@ int cglucose4_n_clauses(CGlucose4 *);
 int cglucose4_n_learnts(CGlucose4 *);
 int cglucose4_n_vars(CGlucose4 *);
 
-void cglucosimp4_set_conf_limit(CGlucoseSimp4 *, int64_t limit);
+void cglucosesimp4_set_conf_limit(CGlucoseSimp4 *, int64_t limit);
 void cglucosesimp4_set_prop_limit(CGlucoseSimp4 *, int64_t limit);
 void cglucosesimp4_set_no_limit(CGlucoseSimp4 *);
 void cglucosesimp4_interrupt(CGlucoseSimp4 *);
