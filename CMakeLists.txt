@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(glucose4)
 
 option(BUILD_SHARED_LIBS OFF "True for building shared object")
+option(BUILD_SYRUP OFF "True for building glucose4-syrup and the parallel library")
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -45,9 +46,15 @@ add_library(glucose4 ${lib_type} ${lib_srcs})
 add_executable(glucose4-simp ${main_simp})
 target_link_libraries(glucose4-simp glucose4)
 
-# PARALLEL STUFF:
-add_library(glucosep4 ${lib_type} ${lib_srcs} ${lib_parallel_srcs})
-add_executable(glucose4-syrup ${main_parallel})
-target_link_libraries(glucose4-syrup glucosep4 ${CMAKE_THREAD_LIBS_INIT})
+if(BUILD_SYRUP)
+    # PARALLEL STUFF:
+    add_library(glucosep4 ${lib_type} ${lib_srcs} ${lib_parallel_srcs})
+    add_executable(glucose4-syrup ${main_parallel})
+    target_link_libraries(glucose4-syrup glucosep4 ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
-install(TARGETS glucose4 glucosep4 glucose4-simp glucose4-syrup)
+install(TARGETS glucose4 glucose4-simp)
+
+if(BUILD_SYRUP)
+    install(TARGETS glucosep4 glucose4-syrup)
+endif()
