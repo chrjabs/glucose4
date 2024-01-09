@@ -333,10 +333,16 @@ Solver::~Solver() {
 ****************************************************************/
 
 
+#if defined(_MSC_VER) || defined(__MINGW32__)
+void Solver::write_char(unsigned char ch) {
+    printf("WARNING! write_char not supported on this architecture.\n");
+}
+#else
 void Solver::write_char(unsigned char ch) {
     if(putc_unlocked((int) ch, certifiedOutput) == EOF)
         exit(1);
 }
+#endif
 
 
 void Solver::write_lit(int n) {
