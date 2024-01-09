@@ -93,7 +93,11 @@ void cglucosesimp4_add(CGlucoseSimp4 *handle, int lit) {
 }
 
 void cglucose4_assume(CGlucose4 *handle, int lit) {
-  ((Wrapper *)handle)->assumps.push(IPASIR2MS(lit));
+  Wrapper *wrapper = (Wrapper *)handle;
+  int var = abs(lit) - 1;
+  while (var >= wrapper->solver->nVars())
+    wrapper->solver->newVar();
+  wrapper->assumps.push(IPASIR2MS(lit));
 }
 
 void cglucosesimp4_assume(CGlucoseSimp4 *handle, int lit) {
