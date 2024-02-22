@@ -2,16 +2,20 @@ cmake_minimum_required(VERSION 3.5)
 
 project(glucose4)
 
-option(BUILD_SHARED_LIBS OFF "True for building shared object")
-option(BUILD_SYRUP ON "True for building glucose4-syrup and the parallel library")
-option(BUILD_EXECUTABLES ON "True for building executables and not just libraries")
+option(BUILD_SHARED_LIBS "True for building shared object" OFF)
+option(BUILD_SYRUP "True for building glucose4-syrup and the parallel library" ON)
+option(BUILD_EXECUTABLES "True for building executables and not just libraries" ON)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Dependencies {{{
-find_package(ZLIB REQUIRED)
-find_package(Threads REQUIRED)
+if(BUILD_EXECUTABLES)
+    find_package(ZLIB REQUIRED)
+    if(BUILD_SYRUP)
+        find_package(Threads REQUIRED)
+    endif()
+endif()
 # }}}
 
 set(main_simp "simp/Main.cc")
@@ -35,18 +39,15 @@ else()
 endif()
 
 
-include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${ZLIB_INCLUDE_DIR})
-
-link_libraries(${ZLIB_LIBRARY})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # base library
 add_library(glucose4 ${lib_type} ${lib_srcs})
 
 if(BUILD_EXECUTABLES)
+    include_directories(${ZLIB_INCLUDE_DIR})
     add_executable(glucose4-simp ${main_simp})
-    target_link_libraries(glucose4-simp glucose4)
+    target_link_libraries(glucose4-simp glucose4 ${ZLIB_LIBRARY})
 endif()
 
 if(BUILD_SYRUP)
@@ -54,7 +55,7 @@ if(BUILD_SYRUP)
     add_library(glucosep4 ${lib_type} ${lib_srcs} ${lib_parallel_srcs})
     if(BUILD_EXECUTABLES)
         add_executable(glucose4-syrup ${main_parallel})
-        target_link_libraries(glucose4-syrup glucosep4 ${CMAKE_THREAD_LIBS_INIT})
+        target_link_libraries(glucose4-syrup glucosep4 ${ZLIB_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 endif()
 
