@@ -5,6 +5,7 @@ project(glucose4)
 option(BUILD_SHARED_LIBS "True for building shared object" OFF)
 option(BUILD_SYRUP "True for building glucose4-syrup and the parallel library" ON)
 option(BUILD_EXECUTABLES "True for building executables and not just libraries" ON)
+option(QUIET "Disable all output to stdout" OFF)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -17,6 +18,10 @@ if(BUILD_EXECUTABLES)
     endif()
 endif()
 # }}}
+
+if(QUIET)
+  add_compile_definitions("QUIET")
+endif()
 
 set(main_simp "simp/Main.cc")
 set(main_parallel "parallel/Main.cc")

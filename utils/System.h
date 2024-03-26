@@ -47,7 +47,12 @@ extern double memUsedPeak();        // Peak-memory in mega bytes (returns 0 for 
 
 static inline double Glucose::cpuTime(void) { return (double)clock() / CLOCKS_PER_SEC; }
 
-static inline double Glucose::realTime() { printf("WARNING! Real time not supported on this architecture.\n"); return .0; }
+static inline double Glucose::realTime() {
+#ifndef QUIET
+  printf("WARNING! Real time not supported on this architecture.\n");
+#endif
+  return .0;
+}
 
 #else
 #include <sys/time.h>

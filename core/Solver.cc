@@ -55,6 +55,10 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "core/Constants.h"
 #include"simp/SimpSolver.h"
 
+#ifdef QUIET
+#define printf(fmt, ...) (0)
+#endif
+
 using namespace Glucose;
 
 

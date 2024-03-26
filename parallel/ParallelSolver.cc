@@ -50,6 +50,10 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "parallel/ParallelSolver.h"
 #include "mtl/Sort.h"
 
+#ifdef QUIET
+#define printf(fmt, ...) (0)
+#endif
+
 using namespace Glucose;
 
 //=====================================================================
