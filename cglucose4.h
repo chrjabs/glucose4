@@ -98,6 +98,7 @@ uint64_t cglucosesimp4_conflicts(CGlucoseSimp4 *);
 
 // Simplification-specific functions
 void cglucosesimp4_set_frozen(CGlucoseSimp4 *, int var, bool frozen);
+int cglucosesimp4_is_frozen(CGlucoseSimp4 *, int var);
 int cglucosesimp4_is_eliminated(CGlucoseSimp4 *, int var);
 // -----------------------------------------------------------------------------
 
