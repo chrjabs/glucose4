@@ -24,7 +24,9 @@
  */
 
 #include "core/Solver.h"
+#include "mtl/XAlloc.h"
 #include "simp/SimpSolver.h"
+#include <new>
 
 #define IPASIR2MS(il) (mkLit(abs(il) - 1, il < 0))
 
@@ -63,10 +65,24 @@ extern "C" {
 
 const char *cglucose4_signature(void) { return "Glucose 4.2.1"; }
 
-CGlucose4 *cglucose4_init(void) { return (CGlucose4 *)new Wrapper(); }
+CGlucose4 *cglucose4_init(void) {
+  try {
+    return (CGlucose4 *)new Wrapper();
+  } catch (std::bad_alloc &) {
+    return nullptr;
+  } catch (OutOfMemoryException &) {
+    return nullptr;
+  }
+}
 
 CGlucoseSimp4 *cglucosesimp4_init(void) {
-  return (CGlucoseSimp4 *)new SimpWrapper();
+  try {
+    return (CGlucoseSimp4 *)new SimpWrapper();
+  } catch (std::bad_alloc &) {
+    return nullptr;
+  } catch (OutOfMemoryException &) {
+    return nullptr;
+  }
 }
 
 void cglucose4_release(CGlucose4 *handle) { delete (Wrapper *)handle; }
@@ -75,21 +91,26 @@ void cglucosesimp4_release(CGlucoseSimp4 *handle) {
   delete (SimpWrapper *)handle;
 }
 
-void cglucose4_add(CGlucose4 *handle, int lit) {
+int cglucose4_add(CGlucose4 *handle, int lit) {
   Wrapper *wrapper = (Wrapper *)handle;
-  if (lit) {
-    int var = abs(lit) - 1;
-    while (var >= wrapper->solver->nVars())
-      wrapper->solver->newVar();
-    wrapper->clause.push(IPASIR2MS(lit));
-    return;
+  try {
+    if (lit) {
+      int var = abs(lit) - 1;
+      while (var >= wrapper->solver->nVars())
+        wrapper->solver->newVar();
+      wrapper->clause.push(IPASIR2MS(lit));
+      return 0;
+    }
+    wrapper->solver->addClause_(wrapper->clause);
+    wrapper->clause.clear();
+    return 0;
+  } catch (OutOfMemoryException &) {
+    return OUT_OF_MEM;
   }
-  wrapper->solver->addClause_(wrapper->clause);
-  wrapper->clause.clear();
 }
 
-void cglucosesimp4_add(CGlucoseSimp4 *handle, int lit) {
-  cglucose4_add((CGlucose4 *)handle, lit);
+int cglucosesimp4_add(CGlucoseSimp4 *handle, int lit) {
+  return cglucose4_add((CGlucose4 *)handle, lit);
 }
 
 void cglucose4_assume(CGlucose4 *handle, int lit) {
@@ -106,8 +127,13 @@ void cglucosesimp4_assume(CGlucoseSimp4 *handle, int lit) {
 
 int cglucose4_solve(CGlucose4 *handle) {
   Wrapper *wrapper = (Wrapper *)handle;
-  lbool res = wrapper->solver->solveLimited(wrapper->assumps);
-  wrapper->assumps.clear();
+  lbool res;
+  try {
+    res = wrapper->solver->solveLimited(wrapper->assumps);
+    wrapper->assumps.clear();
+  } catch (OutOfMemoryException &) {
+    return OUT_OF_MEM;
+  }
   if (res == l_True) {
     return 10;
   }
@@ -153,12 +179,22 @@ int cglucosesimp4_failed(CGlucoseSimp4 *handle, int lit) {
   return cglucose4_failed((CGlucose4 *)handle, lit);
 }
 
-void cglucose4_phase(CGlucose4 *handle, int lit) {
-  return ((Wrapper *)handle)->solver->phase(IPASIR2MS(lit));
+int cglucose4_phase(CGlucose4 *handle, int lit) {
+  try {
+    ((Wrapper *)handle)->solver->phase(IPASIR2MS(lit));
+    return 0;
+  } catch (OutOfMemoryException &) {
+    return OUT_OF_MEM;
+  }
 }
 
-void cglucosesimp4_phase(CGlucoseSimp4 *handle, int lit) {
-  return ((SimpWrapper *)handle)->solver->phase(IPASIR2MS(lit));
+int cglucosesimp4_phase(CGlucoseSimp4 *handle, int lit) {
+  try {
+    ((SimpWrapper *)handle)->solver->phase(IPASIR2MS(lit));
+    return 0;
+  } catch (OutOfMemoryException &) {
+    return OUT_OF_MEM;
+  }
 }
 
 void cglucose4_unphase(CGlucose4 *handle, int lit) {

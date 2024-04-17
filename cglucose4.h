@@ -37,19 +37,23 @@ extern "C" {
 
 const char *cglucose4_signature(void);
 
+// This value is returned from _solve, _add, and _phase if the solver runs out
+// of memory
+const int OUT_OF_MEM = 50;
+
 // -----------------------------------------------------------------------------
 // API for the solver without preprocessing
 typedef struct CGlucose4 CGlucose4;
 CGlucose4 *cglucose4_init(void);
 void cglucose4_release(CGlucose4 *);
 
-void cglucose4_add(CGlucose4 *, int lit);
+int cglucose4_add(CGlucose4 *, int lit);
 void cglucose4_assume(CGlucose4 *, int lit);
 int cglucose4_solve(CGlucose4 *);
 int cglucose4_val(CGlucose4 *, int lit);
 int cglucose4_failed(CGlucose4 *, int lit);
 
-void cglucose4_phase(CGlucose4 *, int lit);
+int cglucose4_phase(CGlucose4 *, int lit);
 void cglucose4_unphase(CGlucose4 *, int lit);
 
 int cglucose4_n_assigns(CGlucose4 *);
@@ -73,13 +77,13 @@ typedef struct CGlucoseSimp4 CGlucoseSimp4;
 CGlucoseSimp4 *cglucosesimp4_init(void);
 void cglucosesimp4_release(CGlucoseSimp4 *);
 
-void cglucosesimp4_add(CGlucoseSimp4 *, int lit);
+int cglucosesimp4_add(CGlucoseSimp4 *, int lit);
 void cglucosesimp4_assume(CGlucoseSimp4 *, int lit);
 int cglucosesimp4_solve(CGlucoseSimp4 *);
 int cglucosesimp4_val(CGlucoseSimp4 *, int lit);
 int cglucosesimp4_failed(CGlucoseSimp4 *, int lit);
 
-void cglucosesimp4_phase(CGlucoseSimp4 *, int lit);
+int cglucosesimp4_phase(CGlucoseSimp4 *, int lit);
 void cglucosesimp4_unphase(CGlucoseSimp4 *, int lit);
 
 int cglucose4_n_assigns(CGlucose4 *);
