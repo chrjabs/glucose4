@@ -30,6 +30,7 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include <stdint.h>
 
 // Glucose 4 C API
@@ -86,10 +87,10 @@ int cglucosesimp4_failed(CGlucoseSimp4 *, int lit);
 int cglucosesimp4_phase(CGlucoseSimp4 *, int lit);
 void cglucosesimp4_unphase(CGlucoseSimp4 *, int lit);
 
-int cglucose4_n_assigns(CGlucose4 *);
-int cglucose4_n_clauses(CGlucose4 *);
-int cglucose4_n_learnts(CGlucose4 *);
-int cglucose4_n_vars(CGlucose4 *);
+int cglucosesimp4_n_assigns(CGlucoseSimp4 *);
+int cglucosesimp4_n_clauses(CGlucoseSimp4 *);
+int cglucosesimp4_n_learnts(CGlucoseSimp4 *);
+int cglucosesimp4_n_vars(CGlucoseSimp4 *);
 
 void cglucosesimp4_set_conf_limit(CGlucoseSimp4 *, int64_t limit);
 void cglucosesimp4_set_prop_limit(CGlucoseSimp4 *, int64_t limit);
