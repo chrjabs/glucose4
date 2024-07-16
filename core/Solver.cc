@@ -993,6 +993,54 @@ void Solver::bumpForceUNSAT(Lit q) {
     return;
 }
 
+// Propagate and check
+// This is based on the implementation in PySat
+// https://github.com/pysathq/pysat/blob/master/solvers/patches/glucose421.patch
+bool Solver::propCheck(const vec<Lit>& assumps, int psaving, void(*prop_cb)(void *, int), void *cb_data)
+{
+    if (!ok) return false;
+
+    bool unsat = false;
+    int  level = decisionLevel();
+    CRef confl = CRef_Undef;
+
+    // dealing with phase saving
+    int psaving_copy = phase_saving;
+    phase_saving = psaving;
+
+    // propagate each assumption at a new decision level
+    for (int i = 0; !unsat && confl == CRef_Undef && i < assumps.size(); ++i) {
+        Lit p = assumps[i];
+
+        if (value(p) == l_False)
+            unsat = true;
+        else if (value(p) != l_True) {
+            newDecisionLevel();
+            uncheckedEnqueue(p);
+            confl = propagate();
+        }
+    }
+
+    // copying the result
+    if (decisionLevel() > level) {
+        for (int c = trail_lim[level]; c < trail.size(); ++c)
+            prop_cb(cb_data, ipasir(trail[c]));
+
+        // if there is a conflict, pushing the conflicting literal as well
+        // may choose wrong literal if the clause is binary
+        if (confl != CRef_Undef)
+            prop_cb(cb_data, ipasir(ca[confl][0]));
+
+        // backtracking
+        cancelUntil(level);
+    }
+
+    // restoring phase saving
+    phase_saving = psaving_copy;
+
+    return !unsat && confl == CRef_Undef;
+}
+
 
 /*_________________________________________________________________________________________________
 |

@@ -293,7 +293,7 @@ uint64_t cglucosesimp4_conflicts(CGlucoseSimp4 *handle) {
   return ((SimpWrapper *)handle)->solver->conflicts;
 }
 
-void cglucosesimp4_set_frozen(CGlucoseSimp4 *handle, int var, bool frozen) {
+void cglucosesimp4_set_frozen(CGlucoseSimp4 *handle, int var, int frozen) {
   ((SimpWrapper *)handle)->solver->setFrozen(var - 1, frozen);
 }
 
@@ -303,5 +303,24 @@ int cglucosesimp4_is_frozen(CGlucoseSimp4 *handle, int var) {
 
 int cglucosesimp4_is_eliminated(CGlucoseSimp4 *handle, int var) {
   return ((SimpWrapper *)handle)->solver->isEliminated(var - 1);
+}
+
+int cglucose4_propcheck(CGlucose4 *handle, int psaving,
+                        void (*prop_cb)(void *, int), void *cb_data) {
+  Wrapper *wrapper = (Wrapper *)handle;
+  bool res;
+  try {
+    res =
+        wrapper->solver->propCheck(wrapper->assumps, psaving, prop_cb, cb_data);
+    wrapper->assumps.clear();
+  } catch (OutOfMemoryException &) {
+    return OUT_OF_MEM;
+  }
+  return res ? 10 : 20;
+}
+
+int cglucosesimp4_propcheck(CGlucoseSimp4 *handle, int psaving,
+                            void (*prop_cb)(void *, int), void *cb_data) {
+  return cglucose4_propcheck((CGlucose4 *)handle, psaving, prop_cb, cb_data);
 }
 }

@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 // Glucose 4 C API
@@ -70,6 +70,13 @@ void cglucose4_interrupt(CGlucose4 *);
 uint64_t cglucose4_decisions(CGlucose4 *);
 uint64_t cglucose4_propagations(CGlucose4 *);
 uint64_t cglucose4_conflicts(CGlucose4 *);
+
+// Propagates the assumptions set via `cglucose_assume`, returns 20 if a
+// conflict was encountered, 10 if not. The list of propagated literals is
+// returned via the `prop_cb`. If the solver runs out of memory, returns
+// `OUT_OF_MEM`.
+int cglucose4_propcheck(CGlucose4 *, int psaving, void (*prop_cb)(void *, int),
+                        void *cb_data);
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
@@ -101,8 +108,15 @@ uint64_t cglucosesimp4_decisions(CGlucoseSimp4 *);
 uint64_t cglucosesimp4_propagations(CGlucoseSimp4 *);
 uint64_t cglucosesimp4_conflicts(CGlucoseSimp4 *);
 
+// Propagates the assumptions set via `cglucosesimp4_assume`, returns 20 if a
+// conflict was encountered, 10 if not. The list of propagated literals is
+// returned via the `prop_cb`. If the solver runs out of memory, returns
+// `OUT_OF_MEM`.
+int cglucosesimp4_propcheck(CGlucoseSimp4 *, int psaving,
+                            void (*prop_cb)(void *, int), void *cb_data);
+
 // Simplification-specific functions
-void cglucosesimp4_set_frozen(CGlucoseSimp4 *, int var, bool frozen);
+void cglucosesimp4_set_frozen(CGlucoseSimp4 *, int var, int frozen);
 int cglucosesimp4_is_frozen(CGlucoseSimp4 *, int var);
 int cglucosesimp4_is_eliminated(CGlucoseSimp4 *, int var);
 // -----------------------------------------------------------------------------
